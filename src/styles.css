@@ -1,0 +1,59 @@
+/*  Josh's Custom CSS Reset  https://www.joshwcomeau.com/css/custom-css-reset/*/
+*, *::before, *::after {
+    box-sizing: border-box;}
+* {
+    margin: 0;}
+body {
+    line-height: 1.5;  -webkit-font-smoothing: antialiased;
+    font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";}
+img, picture, video, canvas, svg {
+    display: block;  max-width: 100%;}
+input, button, textarea, select {
+    font: inherit;}
+p, h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: break-word;}
+p {
+    text-wrap: pretty;}
+h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;}
+#root, #__next {
+    isolation: isolate;}
+
+#content {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: stretch;
+}
+
+#sidebar {
+    width: max(30%, 150px);
+    padding: 1rem;
+    background-color: whitesmoke;
+}
+
+#projects {
+    padding: 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: orange;
+}
+
+#project-list {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.todo-list {
+    padding: .5rem;
+    border-radius: 8px;
+    background-color: white;
+}
+
+.todo-item {
+    border-radius: 8px;
+    background-color: orange;
+}
