@@ -1,13 +1,39 @@
 import './styles.css';
 
+const projects = [];
+
+class todoList {
+	constructor(title) {
+		this.title = title;
+		this.todoList = [];
+		projects.push(this); // adds that object to the projects array. 'this' refers to the newly created todoList object.
+	}
+
+	add(todoItem) {
+		this.todoList.push(todoItem);
+	}
+
+	getTitle() {
+		return this.title;
+	}
+
+	getTodos() {
+		return this.todoList;
+	}
+}
+
+const defaultList = new todoList('default');
+console.log(projects, typeof projects);
+// console.log(defaultList, typeof defaultList);
+
 class todoItem {
 	constructor(title, description, dueDate, priority, notes, checklist) {
-		this.title = title;
-		this.description = description;
-		this.dueDate = dueDate;
-		this.priority = priority;
-		this.notes = notes;
-		this.checklist = checklist;
+		this.title = title; // string
+		this.description = description; // string
+		this.dueDate = dueDate; // date
+		this.priority = priority; // number
+		this.notes = notes; // string
+		this.checklist = checklist; // array? boolean?
 	}
 }
 
@@ -19,4 +45,5 @@ const testItem = new todoItem(
 	'The Odin Project',
 	true
 );
-console.log(testItem);
+
+defaultList.add(testItem);
