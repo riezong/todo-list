@@ -85,7 +85,7 @@ const todoListLogic = (function () {
 	// console.log(listTodo, typeof listTodo);
 	// console.log(listTodo.getTodos());
 
-	return { projects };
+	return { projects, listTodo, listDoing, listDone, todoList, todoItem };
 })();
 
 // console.log(todoListLogic.projects);

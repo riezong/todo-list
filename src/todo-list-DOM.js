@@ -1,11 +1,14 @@
 import { todoListLogic } from './todo-list-logic.js';
-
-const projectList = todoListLogic.projects;
 // console.log(projectList[0]);
 // console.log(listTodo, typeof listTodo);
 // console.log(listTodo.getTodos());
 
 const todoListDOM = (function () {
+	const projectList = todoListLogic.projects;
+	const todoListClass = todoListLogic.todoList;
+	const listTodo = projectList[0];
+	const todoItemClass = todoListLogic.todoItem;
+
 	const Content = document.querySelector('#content');
 
 	function renderSidebar() {
@@ -15,19 +18,52 @@ const todoListDOM = (function () {
 		Content.appendChild(sidebar);
 	}
 
-	function renderProjectList() {
+	function renderProjectContainer() {
 		const projectsContainer = document.createElement('div');
 		projectsContainer.setAttribute('id', 'projects');
 		Content.appendChild(projectsContainer);
+	}
 
-		const projectTitle = document.createElement('h1');
-		// projectTitle.setAttribute('id', 'projects');
-		projectTitle.textContent = 'projects';
-		projects.appendChild(projectTitle);
+	function renderProjectTitleBar() {
+		const projectsContainer = document.querySelector('#projects');
+
+		const titleBar = document.createElement('div');
+		titleBar.setAttribute('id', 'title-bar');
+		projectsContainer.appendChild(titleBar);
+
+		const pageTitle = document.createElement('h1');
+		pageTitle.textContent = 'projects';
+		titleBar.appendChild(pageTitle);
+
+		const addItemButton = document.createElement('button');
+		addItemButton.setAttribute('id', 'add-item');
+		addItemButton.textContent = 'New Todo Item';
+		addItemButton.addEventListener('click', () => newTodoButton());
+		titleBar.appendChild(addItemButton);
+	}
+
+	function newTodoButton() {
+		const test = new todoItemClass(
+			'exercise',
+			'walk 5000 steps',
+			'2025-03-10',
+			1,
+			'The Odin Project',
+			true
+		);
+
+		console.log(listTodo, typeof listTodo);
+		listTodo.add(test);
+
+		refreshProjectList();
+	}
+
+	function renderProjectList() {
+		const projectsContainer = document.querySelector('#projects');
 
 		const projectLists = document.createElement('div');
 		projectLists.setAttribute('id', 'project-list');
-		projects.appendChild(projectLists);
+		projectsContainer.appendChild(projectLists);
 
 		for (const currentProject of projectList) {
 			// console.log(list, typeof list);
@@ -53,6 +89,16 @@ const todoListDOM = (function () {
 		}
 	}
 
+	function refreshProjectList() {
+		const projectsContainer = document.querySelector('#projects');
+		while (projectsContainer.firstChild) {
+			projectsContainer.removeChild(projectsContainer.lastChild);
+		}
+		renderProjectContainer();
+		renderProjectTitleBar();
+		renderProjectList();
+	}
+
 	function renderTodoItem(item, todos) {
 		console.log(item);
 
@@ -74,7 +120,7 @@ const todoListDOM = (function () {
 		const toggleDetailsButton = document.createElement('button');
 		toggleDetailsButton.textContent = 'Show More';
 		toggleDetailsButton.addEventListener('click', () =>
-			showItemDetails(
+			toggleItemDetails(
 				item,
 				todos,
 				todoDisplay,
@@ -94,7 +140,7 @@ const todoListDOM = (function () {
 		return todoDisplay;
 	}
 
-	function showItemDetails(
+	function toggleItemDetails(
 		item,
 		todos,
 		todoDisplay,
@@ -115,6 +161,11 @@ const todoListDOM = (function () {
 				itemNotes.textContent = item.notes;
 				todoDetailsContainer.appendChild(itemNotes);
 
+				const editDetailsButton = document.createElement('button');
+				editDetailsButton.textContent = 'Edit';
+				editDetailsButton.addEventListener('click', () => editItemDetails());
+				todoDisplay.appendChild(editDetailsButton);
+
 				toggleDetailsButton.textContent = 'Hide';
 				break;
 
@@ -122,6 +173,8 @@ const todoListDOM = (function () {
 				while (todoDetailsContainer.firstChild) {
 					todoDetailsContainer.removeChild(todoDetailsContainer.lastChild);
 				}
+
+				todoDisplay.removeChild(todoDisplay.lastChild);
 
 				toggleDetailsButton.textContent = 'Show More';
 				break;
@@ -137,7 +190,11 @@ const todoListDOM = (function () {
 		console.log(todos);
 	}
 
+	function editItemDetails() {}
+
 	renderSidebar();
+	renderProjectContainer();
+	renderProjectTitleBar();
 	renderProjectList();
 })();
 
