@@ -16,9 +16,9 @@ const todoListDOM = (function () {
 	}
 
 	function renderProjectList() {
-		const projects = document.createElement('div');
-		projects.setAttribute('id', 'projects');
-		Content.appendChild(projects);
+		const projectsContainer = document.createElement('div');
+		projectsContainer.setAttribute('id', 'projects');
+		Content.appendChild(projectsContainer);
 
 		const projectTitle = document.createElement('h1');
 		// projectTitle.setAttribute('id', 'projects');
@@ -29,65 +29,106 @@ const todoListDOM = (function () {
 		projectLists.setAttribute('id', 'project-list');
 		projects.appendChild(projectLists);
 
-		for (const list of projectList) {
+		for (const currentProject of projectList) {
 			// console.log(list, typeof list);
 			// console.log(list.getTodos(), typeof list.getTodos());
-			const todos = list.getTodos();
+			const todos = currentProject.getTodos();
 			// console.log(todos, typeof todos);
 
-			const newList = document.createElement('div');
-			newList.setAttribute('id', list.title);
-			newList.setAttribute('class', 'todo-list');
+			const projectDisplay = document.createElement('div');
+			projectDisplay.setAttribute('id', currentProject.title);
+			projectDisplay.setAttribute('class', 'todo-list');
 
-			const listTitle = document.createElement('h1');
-			listTitle.textContent = list.title;
-			newList.appendChild(listTitle);
+			const projectTitle = document.createElement('h1');
+			projectTitle.textContent = currentProject.title;
+			projectDisplay.appendChild(projectTitle);
 
 			if (todos.length > 0) {
 				for (const item of todos) {
-					newList.appendChild(renderTodoItem(item, todos));
+					projectDisplay.appendChild(renderTodoItem(item, todos));
 				}
 			}
 
-			projectLists.appendChild(newList);
+			projectLists.appendChild(projectDisplay);
 		}
 	}
 
 	function renderTodoItem(item, todos) {
 		console.log(item);
 
-		const newItem = document.createElement('div');
-		newItem.setAttribute('id', item.title);
-		newItem.setAttribute('class', 'todo-item');
+		const todoDisplay = document.createElement('div');
+		todoDisplay.setAttribute('id', item.title);
+		todoDisplay.setAttribute('class', 'todo-item');
 
-		const itemTitle = document.createElement('h1');
-		itemTitle.textContent = item.title;
-		newItem.appendChild(itemTitle);
+		const todoTitle = document.createElement('h1');
+		todoTitle.textContent = item.title;
+		todoDisplay.appendChild(todoTitle);
 
-		const itemDescription = document.createElement('h2');
-		itemDescription.textContent = item.description;
-		newItem.appendChild(itemDescription);
+		const todoDetailsContainer = document.createElement('div');
+		todoDisplay.appendChild(todoDetailsContainer);
 
-		const itemDue = document.createElement('p');
-		itemDue.textContent = item.dueDate;
-		newItem.appendChild(itemDue);
+		const todoDueDate = document.createElement('p');
+		todoDueDate.textContent = item.dueDate;
+		todoDisplay.appendChild(todoDueDate);
 
-		const itemPriority = document.createElement('p');
-		itemPriority.textContent = item.priority;
-		newItem.appendChild(itemPriority);
-
-		const itemNotes = document.createElement('p');
-		itemNotes.textContent = item.notes;
-		newItem.appendChild(itemNotes);
-
-		const removeItem = document.createElement('button');
-		removeItem.textContent = 'Delete';
-		removeItem.addEventListener('click', () =>
-			deleteItem(item, todos, newItem)
+		const toggleDetailsButton = document.createElement('button');
+		toggleDetailsButton.textContent = 'Show More';
+		toggleDetailsButton.addEventListener('click', () =>
+			showItemDetails(
+				item,
+				todos,
+				todoDisplay,
+				todoDetailsContainer,
+				toggleDetailsButton
+			)
 		);
-		newItem.appendChild(removeItem);
+		todoDisplay.appendChild(toggleDetailsButton);
 
-		return newItem;
+		const deleteItemButton = document.createElement('button');
+		deleteItemButton.textContent = 'Delete';
+		deleteItemButton.addEventListener('click', () =>
+			deleteItem(item, todos, todoDisplay)
+		);
+		todoDisplay.appendChild(deleteItemButton);
+
+		return todoDisplay;
+	}
+
+	function showItemDetails(
+		item,
+		todos,
+		todoDisplay,
+		todoDetailsContainer,
+		toggleDetailsButton
+	) {
+		switch (toggleDetailsButton.textContent) {
+			case 'Show More':
+				const itemDescription = document.createElement('h2');
+				itemDescription.textContent = item.description;
+				todoDetailsContainer.appendChild(itemDescription);
+
+				const itemPriority = document.createElement('p');
+				itemPriority.textContent = item.priority;
+				todoDetailsContainer.appendChild(itemPriority);
+
+				const itemNotes = document.createElement('p');
+				itemNotes.textContent = item.notes;
+				todoDetailsContainer.appendChild(itemNotes);
+
+				toggleDetailsButton.textContent = 'Hide';
+				break;
+
+			case 'Hide':
+				while (todoDetailsContainer.firstChild) {
+					todoDetailsContainer.removeChild(todoDetailsContainer.lastChild);
+				}
+
+				toggleDetailsButton.textContent = 'Show More';
+				break;
+
+			default:
+				break;
+		}
 	}
 
 	function deleteItem(item, todos, newItem) {
