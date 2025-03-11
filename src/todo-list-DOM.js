@@ -53,7 +53,7 @@ const todoListDOM = (function () {
 		);
 
 		console.log(listTodo, typeof listTodo);
-		listTodo.add(test);
+		test.setList(listTodo);
 
 		refreshProjectList();
 	}
@@ -192,7 +192,7 @@ const todoListDOM = (function () {
 
 	function editItemDetails() {}
 
-	renderSidebar();
+	// renderSidebar();
 	renderProjectContainer();
 	renderProjectTitleBar();
 	renderProjectList();

@@ -40,6 +40,11 @@ const todoListLogic = (function () {
 			this.notes = notes; // string
 			this.checklist = checklist; // array? boolean?
 		}
+
+		setList(targetList) {
+			this.targetList = targetList;
+			targetList.add(this);
+		}
 	}
 
 	const todoTestItem = new todoItem(
@@ -50,7 +55,7 @@ const todoListLogic = (function () {
 		'The Odin Project',
 		true
 	);
-	listTodo.add(todoTestItem);
+	todoTestItem.setList(listTodo);
 
 	const todoTestItem2 = new todoItem(
 		'exercise',
@@ -60,7 +65,7 @@ const todoListLogic = (function () {
 		'The Odin Project',
 		true
 	);
-	listTodo.add(todoTestItem2);
+	todoTestItem2.setList(listTodo);
 
 	const doingTestItem = new todoItem(
 		'exercise',
@@ -70,7 +75,7 @@ const todoListLogic = (function () {
 		'The Odin Project',
 		true
 	);
-	listDoing.add(doingTestItem);
+	doingTestItem.setList(listDoing);
 
 	const doneTestItem = new todoItem(
 		'exercise',
@@ -80,7 +85,7 @@ const todoListLogic = (function () {
 		'The Odin Project',
 		true
 	);
-	listDone.add(doneTestItem);
+	doneTestItem.setList(listDone);
 
 	// console.log(listTodo, typeof listTodo);
 	// console.log(listTodo.getTodos());
