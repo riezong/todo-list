@@ -1,7 +1,4 @@
 import { todoListLogic } from './todo-list-logic.js';
-// console.log(projectList[0]);
-// console.log(listTodo, typeof listTodo);
-// console.log(listTodo.getTodos());
 
 const todoListDOM = (function () {
 	const projectList = todoListLogic.projects;
@@ -66,10 +63,7 @@ const todoListDOM = (function () {
 		projectsContainer.appendChild(projectLists);
 
 		for (const currentProject of projectList) {
-			// console.log(list, typeof list);
-			// console.log(list.getTodos(), typeof list.getTodos());
 			const todos = currentProject.getTodos();
-			// console.log(todos, typeof todos);
 
 			const projectDisplay = document.createElement('div');
 			projectDisplay.setAttribute('id', currentProject.title);
@@ -110,12 +104,24 @@ const todoListDOM = (function () {
 		todoTitle.textContent = item.title;
 		todoDisplay.appendChild(todoTitle);
 
-		const todoDetailsContainer = document.createElement('div');
-		todoDisplay.appendChild(todoDetailsContainer);
-
 		const todoDueDate = document.createElement('p');
 		todoDueDate.textContent = item.dueDate;
 		todoDisplay.appendChild(todoDueDate);
+
+		const todoDetailsContainer = document.createElement('div');
+		todoDetailsContainer.setAttribute('class', 'todo-details-container');
+		todoDisplay.appendChild(todoDetailsContainer);
+
+		const todoButtonsContainer = document.createElement('div');
+		todoButtonsContainer.setAttribute('class', 'todo-item-buttons');
+		todoDisplay.appendChild(todoButtonsContainer);
+
+		const deleteItemButton = document.createElement('button');
+		deleteItemButton.textContent = 'Delete';
+		deleteItemButton.addEventListener('click', () =>
+			deleteItem(item, todos, todoDisplay)
+		);
+		todoButtonsContainer.appendChild(deleteItemButton);
 
 		const toggleDetailsButton = document.createElement('button');
 		toggleDetailsButton.textContent = 'Show More';
@@ -123,19 +129,12 @@ const todoListDOM = (function () {
 			toggleItemDetails(
 				item,
 				todos,
-				todoDisplay,
+				todoButtonsContainer,
 				todoDetailsContainer,
 				toggleDetailsButton
 			)
 		);
-		todoDisplay.appendChild(toggleDetailsButton);
-
-		const deleteItemButton = document.createElement('button');
-		deleteItemButton.textContent = 'Delete';
-		deleteItemButton.addEventListener('click', () =>
-			deleteItem(item, todos, todoDisplay)
-		);
-		todoDisplay.appendChild(deleteItemButton);
+		todoButtonsContainer.appendChild(toggleDetailsButton);
 
 		return todoDisplay;
 	}
@@ -143,7 +142,7 @@ const todoListDOM = (function () {
 	function toggleItemDetails(
 		item,
 		todos,
-		todoDisplay,
+		todoButtonsContainer,
 		todoDetailsContainer,
 		toggleDetailsButton
 	) {
@@ -164,7 +163,7 @@ const todoListDOM = (function () {
 				const editDetailsButton = document.createElement('button');
 				editDetailsButton.textContent = 'Edit';
 				editDetailsButton.addEventListener('click', () => editItemDetails());
-				todoDisplay.appendChild(editDetailsButton);
+				todoButtonsContainer.appendChild(editDetailsButton);
 
 				toggleDetailsButton.textContent = 'Hide';
 				break;
@@ -174,7 +173,7 @@ const todoListDOM = (function () {
 					todoDetailsContainer.removeChild(todoDetailsContainer.lastChild);
 				}
 
-				todoDisplay.removeChild(todoDisplay.lastChild);
+				todoButtonsContainer.removeChild(todoButtonsContainer.lastChild);
 
 				toggleDetailsButton.textContent = 'Show More';
 				break;
@@ -192,7 +191,6 @@ const todoListDOM = (function () {
 
 	function editItemDetails() {}
 
-	// renderSidebar();
 	renderProjectContainer();
 	renderProjectTitleBar();
 	renderProjectList();

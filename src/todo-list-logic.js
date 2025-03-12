@@ -26,17 +26,25 @@ const todoListLogic = (function () {
 	const listTodo = new todoList('todo');
 	const listDoing = new todoList('doing');
 	const listDone = new todoList('done');
-	// console.log(listTodo, typeof listTodo);
-	// console.log(listDoing, typeof listDoing);
-	// console.log(listDone, typeof listDone);
-	// console.log(projects);
 
 	class todoItem {
 		constructor(title, description, dueDate, priority, notes, checklist) {
 			this.title = title; // string
 			this.description = description; // string
 			this.dueDate = format(new Date(dueDate), 'dd.MM.yyyy'); // date
-			this.priority = priority; // number
+			switch (priority) {
+				case 1:
+					this.priority = 'High';
+					break;
+				case 2:
+					this.priority = 'Medium';
+					break;
+				case 3:
+					this.priority = 'Low';
+					break;
+				default:
+					break;
+			}
 			this.notes = notes; // string
 			this.checklist = checklist; // array? boolean?
 		}
@@ -87,12 +95,7 @@ const todoListLogic = (function () {
 	);
 	doneTestItem.setList(listDone);
 
-	// console.log(listTodo, typeof listTodo);
-	// console.log(listTodo.getTodos());
-
 	return { projects, listTodo, listDoing, listDone, todoList, todoItem };
 })();
-
-// console.log(todoListLogic.projects);
 
 export { todoListLogic };
