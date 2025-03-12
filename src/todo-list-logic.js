@@ -35,7 +35,7 @@ const todoListLogic = (function () {
 			priority,
 			notes,
 			checklist,
-			targetList
+			targetListValue
 		) {
 			this.title = title; // string
 			this.description = description; // string
@@ -55,15 +55,21 @@ const todoListLogic = (function () {
 			}
 			this.notes = notes; // string
 			this.checklist = checklist; // array? boolean?
-			switch (targetList) {
-				case undefined:
-					this.targetList = listTodo;
-					this.targetList.add(this);
-					break;
-				default:
-					this.targetList = targetList;
-					targetList.add(this);
-					break;
+
+			let targetList;
+
+			if (targetListValue === '' || targetListValue === undefined) {
+				targetList = listTodo;
+				targetList.add(this);
+			} else {
+				// Find the todoList object
+				targetList = projects.find(
+					(project) => project.getTitle() === targetListValue
+				);
+				if (!targetList) {
+					targetList = listTodo; //if project is not found, default to listTodo.
+				}
+				targetList.add(this);
 			}
 		}
 
@@ -106,7 +112,7 @@ const todoListLogic = (function () {
 		1,
 		'The Odin Project',
 		true,
-		listDoing
+		'doing'
 	);
 
 	const doneTestItem = new todoItem(
@@ -116,7 +122,7 @@ const todoListLogic = (function () {
 		1,
 		'The Odin Project',
 		true,
-		listDone
+		'done'
 	);
 
 	return { projects, listTodo, listDoing, listDone, todoList, todoItem };

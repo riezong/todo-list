@@ -29,7 +29,14 @@ const todoListDOM = (function () {
 		todoForm.setAttribute('id', 'todoForm');
 		dialogContent.appendChild(todoForm);
 
-		const fields = ['title', 'dueDate', 'description', 'priority', 'notes'];
+		const fields = [
+			'title',
+			'dueDate',
+			'description',
+			'priority',
+			'notes',
+			'targetList',
+		];
 		for (const item of fields) {
 			// console.log(item);
 			const itemDiv = document.createElement('div');
@@ -43,12 +50,18 @@ const todoListDOM = (function () {
 				case 'description':
 				case 'notes':
 					itemInput.setAttribute('type', 'text');
+					itemInput.setAttribute('value', 'I forgot to fill this in');
 					break;
 				case 'dueDate':
 					itemInput.setAttribute('type', 'date');
+					itemInput.setAttribute('value', '2025-03-07');
 					break;
 				case 'priority':
 					itemInput.setAttribute('type', 'number');
+					itemInput.setAttribute('value', 3);
+					break;
+				case 'targetList':
+					itemInput.setAttribute('type', 'string');
 					break;
 				default:
 					break;
@@ -84,9 +97,11 @@ const todoListDOM = (function () {
 				form.elements.dueDate.value,
 				form.elements.priority.value,
 				form.elements.notes.value,
-				true
+				true,
+				form.elements.targetList.value
 			);
 
+			form.reset();
 			refreshProjectList();
 		});
 
@@ -116,11 +131,10 @@ const todoListDOM = (function () {
 		const addItemButton = document.createElement('button');
 		addItemButton.setAttribute('id', 'add-item');
 		addItemButton.textContent = 'New Todo Item';
-		// addItemButton.addEventListener('click', () => createNewTodo());
 		titleBar.appendChild(addItemButton);
 
 		const showButton = document.querySelector('#add-item');
-		// "Add Book" button opens the dialog modally
+		// "New Todo Item" button opens the dialog modally
 		showButton.addEventListener('click', () => {
 			dialog.showModal();
 		});
@@ -130,19 +144,6 @@ const todoListDOM = (function () {
 		closeButton.addEventListener('click', () => {
 			dialog.close();
 		});
-	}
-
-	function createNewTodo() {
-		// const test = new todoItemClass(
-		// 	'exercise',
-		// 	'walk 5000 steps',
-		// 	'2025-03-10',
-		// 	1,
-		// 	'The Odin Project',
-		// 	true
-		// );
-		// console.log(listTodo, typeof listTodo);
-		// refreshProjectList();
 	}
 
 	function renderProjectList() {
