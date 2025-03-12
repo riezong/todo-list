@@ -15,6 +15,87 @@ const todoListDOM = (function () {
 		Content.appendChild(sidebar);
 	}
 
+	function renderDialog() {
+		const dialog = document.createElement('dialog');
+		dialog.setAttribute('id', 'dialog');
+		dialog.textContent = 'New Todo Item';
+		Content.appendChild(dialog);
+
+		const dialogContent = document.createElement('div');
+		dialogContent.setAttribute('class', 'dialogContent');
+		dialog.appendChild(dialogContent);
+
+		const todoForm = document.createElement('form');
+		todoForm.setAttribute('id', 'todoForm');
+		dialogContent.appendChild(todoForm);
+
+		const fields = ['title', 'dueDate', 'description', 'priority', 'notes'];
+		for (const item of fields) {
+			// console.log(item);
+			const itemDiv = document.createElement('div');
+			const itemLabel = document.createElement('label');
+			itemLabel.setAttribute('for', item);
+			itemLabel.textContent = item;
+			itemDiv.appendChild(itemLabel);
+			const itemInput = document.createElement('input');
+			switch (item) {
+				case 'title':
+				case 'description':
+				case 'notes':
+					itemInput.setAttribute('type', 'text');
+					break;
+				case 'dueDate':
+					itemInput.setAttribute('type', 'date');
+					break;
+				case 'priority':
+					itemInput.setAttribute('type', 'number');
+					break;
+				default:
+					break;
+			}
+
+			itemInput.setAttribute('id', item);
+			itemDiv.appendChild(itemInput);
+			todoForm.appendChild(itemDiv);
+		}
+
+		const submitButton = document.createElement('button');
+		submitButton.setAttribute('type', 'submit');
+		submitButton.setAttribute('value', 'submit');
+		submitButton.setAttribute('id', 'addTodo');
+		submitButton.textContent = 'Add Todo Item';
+		todoForm.appendChild(submitButton);
+
+		const form = document.getElementById('todoForm');
+		form.addEventListener('submit', function (event) {
+			event.preventDefault(); // Prevent page from refreshing
+
+			console.log(
+				form.elements.title.value,
+				form.elements.description.value,
+				form.elements.dueDate.value,
+				form.elements.priority.value,
+				form.elements.notes.value
+			);
+
+			const test = new todoItemClass(
+				form.elements.title.value,
+				form.elements.description.value,
+				form.elements.dueDate.value,
+				form.elements.priority.value,
+				form.elements.notes.value,
+				true
+			);
+
+			refreshProjectList();
+		});
+
+		const closeButton = document.createElement('button');
+		closeButton.setAttribute('id', 'close-dialog');
+		closeButton.textContent = 'X';
+		dialogContent.appendChild(closeButton);
+	}
+
 	function renderProjectContainer() {
 		const projectsContainer = document.createElement('div');
 		projectsContainer.setAttribute('id', 'projects');
@@ -35,24 +116,33 @@ const todoListDOM = (function () {
 		const addItemButton = document.createElement('button');
 		addItemButton.setAttribute('id', 'add-item');
 		addItemButton.textContent = 'New Todo Item';
-		addItemButton.addEventListener('click', () => newTodoButton());
+		// addItemButton.addEventListener('click', () => createNewTodo());
 		titleBar.appendChild(addItemButton);
+
+		const showButton = document.querySelector('#add-item');
+		// "Add Book" button opens the dialog modally
+		showButton.addEventListener('click', () => {
+			dialog.showModal();
+		});
+
+		// "X" button closes the dialog
+		const closeButton = document.querySelector('#close-dialog');
+		closeButton.addEventListener('click', () => {
+			dialog.close();
+		});
 	}
 
-	function newTodoButton() {
-		const test = new todoItemClass(
-			'exercise',
-			'walk 5000 steps',
-			'2025-03-10',
-			1,
-			'The Odin Project',
-			true
-		);
-
-		console.log(listTodo, typeof listTodo);
-		test.setList(listTodo);
-
-		refreshProjectList();
+	function createNewTodo() {
+		// const test = new todoItemClass(
+		// 	'exercise',
+		// 	'walk 5000 steps',
+		// 	'2025-03-10',
+		// 	1,
+		// 	'The Odin Project',
+		// 	true
+		// );
+		// console.log(listTodo, typeof listTodo);
+		// refreshProjectList();
 	}
 
 	function renderProjectList() {
@@ -94,7 +184,7 @@ const todoListDOM = (function () {
 	}
 
 	function renderTodoItem(item, todos) {
-		console.log(item);
+		// console.log(item.targetList.title, typeof item);
 
 		const todoDisplay = document.createElement('div');
 		todoDisplay.setAttribute('id', item.title);
@@ -191,6 +281,7 @@ const todoListDOM = (function () {
 
 	function editItemDetails() {}
 
+	renderDialog();
 	renderProjectContainer();
 	renderProjectTitleBar();
 	renderProjectList();

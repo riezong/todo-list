@@ -28,7 +28,15 @@ const todoListLogic = (function () {
 	const listDone = new todoList('done');
 
 	class todoItem {
-		constructor(title, description, dueDate, priority, notes, checklist) {
+		constructor(
+			title,
+			description,
+			dueDate,
+			priority,
+			notes,
+			checklist,
+			targetList
+		) {
 			this.title = title; // string
 			this.description = description; // string
 			this.dueDate = format(new Date(dueDate), 'dd.MM.yyyy'); // date
@@ -47,11 +55,29 @@ const todoListLogic = (function () {
 			}
 			this.notes = notes; // string
 			this.checklist = checklist; // array? boolean?
+			switch (targetList) {
+				case undefined:
+					this.targetList = listTodo;
+					this.targetList.add(this);
+					break;
+				default:
+					this.targetList = targetList;
+					targetList.add(this);
+					break;
+			}
 		}
 
 		setList(targetList) {
 			this.targetList = targetList;
 			targetList.add(this);
+		}
+
+		changeList(targetList) {
+			console.log(this.targetList);
+			const oldList = this.targetList;
+			const newList = targetList;
+			newList.add(this);
+			oldList.splice(this);
 		}
 	}
 
@@ -63,7 +89,6 @@ const todoListLogic = (function () {
 		'The Odin Project',
 		true
 	);
-	todoTestItem.setList(listTodo);
 
 	const todoTestItem2 = new todoItem(
 		'exercise',
@@ -73,7 +98,6 @@ const todoListLogic = (function () {
 		'The Odin Project',
 		true
 	);
-	todoTestItem2.setList(listTodo);
 
 	const doingTestItem = new todoItem(
 		'exercise',
@@ -81,9 +105,9 @@ const todoListLogic = (function () {
 		'2025-03-10',
 		1,
 		'The Odin Project',
-		true
+		true,
+		listDoing
 	);
-	doingTestItem.setList(listDoing);
 
 	const doneTestItem = new todoItem(
 		'exercise',
@@ -91,9 +115,9 @@ const todoListLogic = (function () {
 		'2025-03-10',
 		1,
 		'The Odin Project',
-		true
+		true,
+		listDone
 	);
-	doneTestItem.setList(listDone);
 
 	return { projects, listTodo, listDoing, listDone, todoList, todoItem };
 })();
