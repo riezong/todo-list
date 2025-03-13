@@ -1,4 +1,5 @@
 import { todoListLogic } from './todo-list-logic.js';
+import { compareAsc, format } from 'date-fns';
 
 const todoListDOM = (function () {
 	const projectList = todoListLogic.projects;
@@ -50,7 +51,7 @@ const todoListDOM = (function () {
 				case 'description':
 				case 'notes':
 					itemInput.setAttribute('type', 'text');
-					itemInput.setAttribute('value', 'I forgot to fill this in');
+					itemInput.setAttribute('value', 'Test');
 					break;
 				case 'dueDate':
 					itemInput.setAttribute('type', 'date');
@@ -83,13 +84,13 @@ const todoListDOM = (function () {
 		form.addEventListener('submit', function (event) {
 			event.preventDefault(); // Prevent page from refreshing
 
-			console.log(
-				form.elements.title.value,
-				form.elements.description.value,
-				form.elements.dueDate.value,
-				form.elements.priority.value,
-				form.elements.notes.value
-			);
+			// console.log(
+			// 	form.elements.title.value,
+			// 	form.elements.description.value,
+			// 	form.elements.dueDate.value,
+			// 	form.elements.priority.value,
+			// 	form.elements.notes.value
+			// );
 
 			const test = new todoItemClass(
 				form.elements.title.value,
@@ -100,6 +101,9 @@ const todoListDOM = (function () {
 				true,
 				form.elements.targetList.value
 			);
+
+			// localStorage.setItem('test', JSON.stringify(test));
+			// console.log(localStorage);
 
 			form.reset();
 			refreshProjectList();
@@ -125,7 +129,7 @@ const todoListDOM = (function () {
 		projectsContainer.appendChild(titleBar);
 
 		const pageTitle = document.createElement('h1');
-		pageTitle.textContent = 'projects';
+		pageTitle.textContent = "RieZong's Todo List";
 		titleBar.appendChild(pageTitle);
 
 		const addItemButton = document.createElement('button');
@@ -161,7 +165,10 @@ const todoListDOM = (function () {
 			projectDisplay.setAttribute('class', 'todo-list');
 
 			const projectTitle = document.createElement('h1');
-			projectTitle.textContent = currentProject.title;
+			const currentProjectTitle = currentProject.title;
+			projectTitle.textContent =
+				currentProjectTitle.charAt(0).toUpperCase() +
+				currentProjectTitle.slice(1);
 			projectDisplay.appendChild(projectTitle);
 
 			if (todos.length > 0) {
@@ -196,7 +203,7 @@ const todoListDOM = (function () {
 		todoDisplay.appendChild(todoTitle);
 
 		const todoDueDate = document.createElement('p');
-		todoDueDate.textContent = item.dueDate;
+		todoDueDate.textContent = format(item.dueDate, 'dd.MM.yyyy');
 		todoDisplay.appendChild(todoDueDate);
 
 		const todoDetailsContainer = document.createElement('div');
@@ -275,9 +282,10 @@ const todoListDOM = (function () {
 	}
 
 	function deleteItem(item, todos, newItem) {
-		newItem.remove();
-		todos.splice(todos.indexOf(item), 1); // Remove the item
-		console.log(todos);
+		newItem.remove(); // Remove from DOM
+		todos.splice(todos.indexOf(item), 1); // Remove from array
+		localStorage.removeItem(item.title); // Remove item from localStorage
+		todoListLogic.saveProjectsToLocalStorage(); // Save updated JSON
 	}
 
 	function editItemDetails() {}

@@ -39,23 +39,20 @@ const todoListLogic = (function () {
 		) {
 			this.title = title; // string
 			this.description = description; // string
-			this.dueDate = format(new Date(dueDate), 'dd.MM.yyyy'); // date
-			switch (priority) {
-				case 1:
-					this.priority = 'High';
-					break;
-				case 2:
-					this.priority = 'Medium';
-					break;
-				case 3:
-					this.priority = 'Low';
-					break;
-				default:
-					break;
+			this.dueDate = new Date(dueDate); // date
+
+			if (priority == 1) {
+				this.priority = 'High';
+			} else if (priority == 2) {
+				this.priority = 'Medium';
+			} else {
+				this.priority = 'Low';
 			}
+
 			this.notes = notes; // string
 			this.checklist = checklist; // array? boolean?
 
+			this.targetListValue = targetListValue;
 			let targetList;
 
 			if (targetListValue === '' || targetListValue === undefined) {
@@ -71,11 +68,19 @@ const todoListLogic = (function () {
 				}
 				targetList.add(this);
 			}
+
+			console.log(targetList.title);
+
+			this.saveToLocalStorage();
+			saveProjectsToLocalStorage();
 		}
 
 		setList(targetList) {
 			this.targetList = targetList;
 			targetList.add(this);
+
+			this.saveToLocalStorage();
+			saveProjectsToLocalStorage();
 		}
 
 		changeList(targetList) {
@@ -84,48 +89,65 @@ const todoListLogic = (function () {
 			const newList = targetList;
 			newList.add(this);
 			oldList.splice(this);
+
+			this.saveToLocalStorage();
+			saveProjectsToLocalStorage();
+		}
+
+		saveToLocalStorage() {
+			localStorage.setItem(this.title, JSON.stringify(this));
+			console.log(localStorage);
 		}
 	}
 
-	const todoTestItem = new todoItem(
-		'study',
-		'study one hour',
-		'2025-03-10',
-		1,
-		'The Odin Project',
-		true
-	);
+	function saveProjectsToLocalStorage() {
+		localStorage.setItem('projects', JSON.stringify(projects));
+	}
 
-	const todoTestItem2 = new todoItem(
-		'exercise',
-		'walk 5000 steps',
-		'2025-03-10',
-		1,
-		'The Odin Project',
-		true
-	);
+	function loadFromLocalStorage() {
+		const projectsData = JSON.parse(localStorage.getItem('projects'));
+		if (projectsData) {
+			projectsData.forEach((projectData) => {
+				// Check if a project with the same title already exists
+				const existingProject = projects.find(
+					(project) => project.title === projectData.title
+				);
 
-	const doingTestItem = new todoItem(
-		'exercise',
-		'walk 5000 steps',
-		'2025-03-10',
-		1,
-		'The Odin Project',
-		true,
-		'doing'
-	);
+				if (!existingProject) {
+					// If it doesn't exist, create a new project
+					const newProject = new todoList(projectData.title);
+					projectData.todoList.forEach((todoData) => {
+						new todoItem(
+							todoData.title,
+							todoData.description,
+							todoData.dueDate,
+							todoData.priority,
+							todoData.notes,
+							todoData.checklist,
+							todoData.targetListValue
+						);
+					});
+				} else {
+					// if the project already exists, just add the todoItems.
+					projectData.todoList.forEach((todoData) => {
+						new todoItem(
+							todoData.title,
+							todoData.description,
+							todoData.dueDate,
+							todoData.priority,
+							todoData.notes,
+							todoData.checklist,
+							todoData.targetListValue
+						);
+					});
+				}
+			});
+		}
+	}
 
-	const doneTestItem = new todoItem(
-		'exercise',
-		'walk 5000 steps',
-		'2025-03-10',
-		1,
-		'The Odin Project',
-		true,
-		'done'
-	);
+	loadFromLocalStorage();
 
-	return { projects, listTodo, listDoing, listDone, todoList, todoItem };
+	return { projects, todoList, todoItem, saveProjectsToLocalStorage };
 })();
 
 export { todoListLogic };

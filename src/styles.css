@@ -80,7 +80,7 @@ input {
 #project-list {
     margin-top: 2rem;
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     align-items: flex-start;
     gap: 1rem;
 }
